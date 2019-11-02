@@ -1,0 +1,76 @@
+#include<iostream>
+#include<fstream>
+#include<cmath>
+using namespace std;
+
+double function(double x);
+double trapezoid_method(double N);
+double integral(double N, double M);
+double error_trapezoid_method(double N, double M);
+double error_integral(double N, double M, double C);
+
+
+double function(double x) {
+  double f = x * log(1. + x);
+  return f;
+}
+
+double trapezoid_method(double N) {
+
+  double step = 1./N;
+  double sum = 0.;
+  const int interval = 1;
+      for(double index = 0; index < interval; index+=step) {
+        sum += (function(index + step) + function(index)) / 2. * step;
+      }
+  return sum;
+}
+
+double error_trapezoid_method(double N, double M) {
+
+  double alpha = 0.5;
+  double a = 2.;
+  double er = pow(alpha, a) / (1-  pow(alpha, a) * abs(trapezoid_method(N)) - trapezoid_method(M));
+  return er;
+}
+
+double integral (double N, double M) {
+
+  const double alpha = 0.5;
+  const int a = 2;
+  double I = (trapezoid_method(N) - pow(alpha, a) * trapezoid_method(M)) / (1 - pow(alpha, a));
+  return I;
+}
+
+
+double error_integral(double N, double M, double C) {
+
+  double er = fabs((integral(N, M)) - integral(M, C)) / integral(M, C);
+  return er;
+}
+
+
+int main() {
+
+
+	cout << trapezoid_method(1.) << "       " <<error_trapezoid_method(2., 1.) << "        " <<integral(2., 1.) << "        " << endl;
+  cout << endl;
+	cout << trapezoid_method(2.) << "       " << "             " << "        " << "               " << "        " <<error_integral(4., 2., 1.) << endl;
+
+	cout << trapezoid_method(4.) << "       " <<error_trapezoid_method(4., 2.) << "        " <<integral(4., 2.) << "        " << endl;
+	cout << endl;
+	cout << trapezoid_method(8.) << "       " <<error_trapezoid_method(16., 8.) << "        " <<integral(16., 8.) << "        " << endl;
+	cout << endl;
+	cout << trapezoid_method(16.) << "       " << "             " << "        " << "               " << "        " <<error_integral(32., 16., 8.) << endl;
+
+	cout << trapezoid_method(32.) << "       " <<error_trapezoid_method(32., 16.) << "        " <<integral(32., 16.) << "        " << endl;
+	cout << endl;
+	cout << trapezoid_method(64.) << "       " <<error_trapezoid_method(128., 64.) << "        " <<integral(128., 64.) << "        " << endl;
+  cout << endl;
+
+	cout << trapezoid_method(128.) << "       " << "             " << "        " << "               " << "        " <<error_integral(256., 128., 64.) << endl;
+	cout << trapezoid_method(256.) << "       " <<error_trapezoid_method(256., 128.) << "        " <<integral(256., 128.) << "        " << endl;
+	cout << endl;
+
+  return 0;
+}
